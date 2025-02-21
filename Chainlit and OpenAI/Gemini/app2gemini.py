@@ -3,7 +3,7 @@ import google.generativeai as genai
 import chainlit as cl
 
 # Configure Gemini API
-genai.configure(api_key="apikey")
+genai.configure(api_key="apikeyhere")
 
 # Initialize the model
 model = genai.GenerativeModel('gemini-2.0-flash')
