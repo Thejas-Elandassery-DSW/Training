@@ -1,0 +1,11 @@
+2025-02-21 12:21:02,176 - DEBUG - This is a debug message
+2025-02-21 12:21:02,176 - INFO - This is an info message
+2025-02-21 12:21:02,176 - WARNING - This is a warning message
+2025-02-21 12:21:02,176 - ERROR - This is an error message
+2025-02-21 12:21:02,176 - CRITICAL - This is a critical message
+2025-02-21 12:21:02,176 - ERROR - Exception occurred
+Traceback (most recent call last):
+  File "/home/thejas/Desktop/Work/Training/Logging/app.py", line 13, in main
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero

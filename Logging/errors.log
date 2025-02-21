@@ -1,0 +1,18 @@
+ERROR:root:This is an error message
+CRITICAL:root:This is a critical message
+ERROR:root:Exception occurred
+Traceback (most recent call last):
+  File "/home/thejas/Desktop/Work/Training/Logging/app.py", line 12, in main
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero
+ERROR:root:This is an error message
+CRITICAL:root:This is a critical message
+ERROR:root:This is an error message
+CRITICAL:root:This is a critical message
+ERROR:root:Exception occurred
+Traceback (most recent call last):
+  File "/home/thejas/Desktop/Work/Training/Logging/app.py", line 12, in main
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero
