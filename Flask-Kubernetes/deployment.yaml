@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-k8s
+  name: flask-thejas
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flask-k8s
+      app: flask-thejas
   template:
     metadata:
       labels:
-        app: flask-k8s
+        app: flask-thejas
     spec:
       containers:
-      - name: flask-k8s
-        image: flask-k8s 
+      - name: flask-thejas
+        image: flask-thejas 
         imagePullPolicy: Never
         ports:
         - containerPort: 5000

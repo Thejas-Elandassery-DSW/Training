@@ -67,7 +67,7 @@ eval $(minikube docker-env)
 2. Build the Docker image inside Minikube:
 
 ```bash
-docker build -t flask-k8s .
+docker build -t flask-thejas .
 ```
 
 3. Deploy PostgreSQL:
@@ -85,7 +85,7 @@ kubectl apply -f flask-deployment.yaml
 5. Get the service URL:
 
 ```bash
-minikube service flask-k8s --url
+minikube service flask-thejas --url
 ```
 
 ## Application Usage

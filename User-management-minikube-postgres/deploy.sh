@@ -26,13 +26,13 @@ docker images | grep flask-thejas
 echo "Creating the templates directory in Minikube..."
 mkdir -p templates
 
-# Deploy PostgreSQL to Minikube
-echo "Deploying PostgreSQL to Minikube..."
-kubectl apply -f postgres-deployment.yaml
+# Deploy PostgreSQL StatefulSet to Minikube
+echo "Deploying PostgreSQL StatefulSet to Minikube..."
+kubectl apply -f postgres-statefulset.yaml
 
 # Wait for PostgreSQL to be ready
-echo "Waiting for PostgreSQL to be ready..."
-kubectl wait --for=condition=ready pod -l app=postgres --timeout=120s
+echo "Waiting for PostgreSQL StatefulSet to be ready..."
+kubectl wait --for=condition=ready pod postgres-0 --timeout=180s
 
 # Deploy Flask application to Minikube
 echo "Deploying Flask application to Minikube..."

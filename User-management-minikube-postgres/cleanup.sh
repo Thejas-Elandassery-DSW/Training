@@ -5,7 +5,7 @@ echo "Deleting Flask deployment and service..."
 kubectl delete -f flask-deployment.yaml
 
 # Delete the PostgreSQL deployment and service
-echo "Deleting PostgreSQL deployment and service..."
-kubectl delete -f postgres-deployment.yaml
+echo "Deleting PostgreSQL Statefulset and service..."
+kubectl delete -f postgres-statefulset.yaml
 
 echo "Cleanup complete!"
