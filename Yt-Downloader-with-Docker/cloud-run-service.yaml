@@ -1,0 +1,31 @@
+# cloud-run-service.yaml
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: youtube-downloader
+spec:
+  template:
+    metadata:
+      annotations:
+        # Important for browser automation
+        autoscaling.knative.dev/maxScale: "5"
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/execution-environment: "gen2"
+        run.googleapis.com/startup-cpu-boost: "true"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 3600  # 1 hour max request time
+      containers:
+        - image: asia-south1-docker.pkg.dev/future-footing-442405-f5/youtbe-downloader/youtube-downloader:latest          
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DOWNLOAD_FOLDER
+              value: "/downloads"
+            # Optional - set to true for development
+            - name: DEBUG
+              value: "true"

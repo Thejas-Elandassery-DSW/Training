@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader | Thejas Elandassery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --primary-dark: #cc0000;
+            --secondary-color: #212529;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+            --success-color: #198754;
+            --info-color: #0dcaf0;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+        
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--dark-gray) 100%);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            font-size: 2rem;
+        }
+        
+        .page-header p {
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            padding: 16px 20px;
+        }
+        
+        .download-card .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .card-body {
+            padding: 24px;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 1px solid #dee2e6;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        
+        .format-selector {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .format-card {
+            flex: 1;
+            min-width: 150px;
+            cursor: pointer;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .format-card:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 0, 0, 0.05);
+        }
+        
+        .format-card.active {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        
+        .format-card i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--dark-gray);
+        }
+        
+        .format-card.active i {
+            color: var(--primary-color);
+        }
+        
+        .format-card input {
+            display: none;
+        }
+        
+        .format-card .format-name {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .format-card .format-desc {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+            margin-bottom: 16px;
+        }
+        
+        .progress-bar {
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .job-card {
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .job-url {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
+        }
+        
+        .badge {
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+        
+        .badge.format-badge {
+            background-color: var(--info-color);
+        }
+        
+        .badge.status-badge {
+            font-size: 0.75rem;
+        }
+        
+        .download-info {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .completed-files-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .completed-files-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .completed-files-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .completed-files-list a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .completed-files-list a:hover {
+            color: var(--primary-color);
+        }
+        
+        .download-icon {
+            color: var(--primary-color);
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        
+        .session-info-card {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+        }
+        
+        .session-info-card .card-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .session-info-card .card-body {
+            padding: 20px;
+        }
+        
+        .session-info-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 20px 0;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .format-selector {
+                flex-direction: column;
+            }
+            
+            .format-card {
+                width: 100%;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-row > div {
+                margin-bottom: 10px;
+            }
+        }
+        
+        /* Loading Spinner */
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary-color);
+        }
+        
+        /* Pulse animation for ongoing downloads */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fab fa-youtube"></i>YouTube Downloader</a>
+            <span class="navbar-text d-none d-md-block">
+                By Thejas Elandassery
+            </span>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="page-header text-center">
+        <div class="container">
+            <h1><i class="fas fa-cloud-download-alt me-2"></i>Download YouTube Videos & Playlists</h1>
+            <p class="mt-2">Convert and download YouTube videos in MP3, MP4 or WebM format for free</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Download Form -->
+        <div class="card download-card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="fas fa-download me-2"></i>New Download</h3>
+            </div>
+            <div class="card-body">
+                <form id="downloadForm">
+                    <div class="mb-4">
+                        <label for="url" class="form-label">YouTube Video or Playlist URL</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fab fa-youtube"></i></span>
+                            <input type="text" class="form-control" id="url" name="url" placeholder="https://www.youtube.com/watch?v=..." required>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                    
+                    <label class="form-label">Choose Format</label>
+                    <div class="format-selector">
+                        <div class="format-card" data-format="mp3">
+                            <input class="form-check-input" type="radio" name="format" id="formatMP3" value="mp3">
+                            <i class="fas fa-music"></i>
+                            <span class="format-name">MP3</span>
+                            <span class="format-desc">Audio only</span>
+                        </div>
+                        <div class="format-card" data-format="mp4">
+                            <input class="form-check-input" type="radio" name="format" id="formatMP4" value="mp4">
+                            <i class="fas fa-film"></i>
+                            <span class="format-name">MP4</span>
+                            <span class="format-desc">Video</span>
+                        </div>
+                        <div class="format-card active" data-format="webm">
+                            <input class="form-check-input" type="radio" name="format" id="formatWebM" value="webm" checked>
+                            <i class="fas fa-video"></i>
+                            <span class="format-name">WebM</span>
+                            <span class="format-desc">Video</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Download History -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0"><i class="fas fa-history me-2"></i>Download History</h3>
+                <button id="clearHistoryBtn" class="btn btn-sm btn-danger"><i class="fas fa-trash me-2"></i>Clear History</button>
+            </div>
+            <div class="card-body">
+                <div id="jobsList">
+                    <!-- Jobs will be loaded here -->
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
+                        <p class="text-muted">No active download jobs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Session Information -->
+        <div class="card session-info-card mt-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-info-circle me-2"></i>Session Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-clock session-info-icon"></i>
+                    <div>
+                        <p class="mb-0">Your downloads are session-based. Files will be automatically deleted when your session expires after 30 minutes of inactivity.</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle session-info-icon"></i>
+                    <div>
+                        <p class="mb-0">Make sure to download your files before closing the browser or clearing your history.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="loadingSpinner">
+        <div class="spinner-content">
+            <div class="spinner-border mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5>Processing Your Request</h5>
+            <p class="text-muted mb-0">This may take a moment...</p>
+        </div>
+    </div>
+
+    <!-- Job Template -->
+    <template id="jobTemplate">
+        <div class="card job-card">
+            <div class="card-header">
+                <div class="job-header">
+                    <h5 class="job-url mb-0"></h5>
+                    <div>
+                        <span class="badge format-badge"></span>
+                        <span class="badge status-badge"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3">
+                    <div class="progress-bar job-progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
+                
+                <div class="row info-row mb-3">
+                    <div class="col-md-4 mb-2 mb-md-0">
+                        <div class="download-info">
+                            <div class="info-title"><i class="fas fa-file me-2"></i>Current File</div>
+                            <div class="job-current-file">None</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2 mb-md-0">
+                        <div class="download-info">
+                            <div class="info-title"><i class="fas fa-tachometer-alt me-2"></i>Speed</div>
+                            <div class="job-speed">N/A</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="download-info">
+                            <div class="info-title"><i class="fas fa-clock me-2"></i>ETA</div>
+                            <div class="job-eta">N/A</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="job-error alert alert-danger d-none">
+                    <i class="fas fa-exclamation-circle me-2"></i><span class="error-message"></span>
+                </div>
+                
+                <div class="job-completed-files">
+                    <h5><i class="fas fa-check-circle me-2"></i>Completed Files</h5>
+                    <ul class="completed-files-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Format selection
+            $('.format-card').click(function() {
+                $('.format-card').removeClass('active');
+                $(this).addClass('active');
+                $(this).find('input[type="radio"]').prop('checked', true);
+            });
+            
+            // Load initial jobs
+            loadJobs();
+            
+            // Set up polling for job updates
+            setInterval(loadJobs, 1000);
+            
+            // Set up session ping to keep session alive while page is open
+            setInterval(pingSession, 60000); // Ping every minute
+            
+            // Handle page visibility changes
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    // User returned to the page, update immediately
+                    loadJobs();
+                }
+            });
+            
+            // Submit form
+            $('#downloadForm').submit(function(e) {
+                e.preventDefault();
+                
+                // Show loading spinner
+                $('#loadingSpinner').css('display', 'flex');
+                
+                $.ajax({
+                    url: '/download',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#url').val('');
+                        loadJobs();
+                        // Hide loading spinner
+                        $('#loadingSpinner').hide();
+                    },
+                    error: function(xhr) {
+                        // Hide loading spinner
+                        $('#loadingSpinner').hide();
+                        alert(xhr.responseJSON.error || 'An error occurred');
+                    }
+                });
+            });
+            
+            // Clear history button
+            $('#clearHistoryBtn').click(function() {
+                if (confirm('Are you sure you want to clear your download history? All downloaded files will be deleted.')) {
+                    // Show loading spinner
+                    $('#loadingSpinner').css('display', 'flex');
+                    
+                    $.ajax({
+                        url: '/clear-history',
+                        type: 'POST',
+                        success: function(response) {
+                            // Clear previously completed files array
+                            previousCompletedFiles = [];
+                            // Reload jobs list
+                            loadJobs();
+                            // Hide loading spinner
+                            $('#loadingSpinner').hide();
+                        },
+                        error: function(xhr) {
+                            // Hide loading spinner
+                            $('#loadingSpinner').hide();
+                            alert('Error clearing history');
+                        }
+                    });
+                }
+            });
+            
+            // Add beforeunload event listener
+            window.addEventListener('beforeunload', function(e) {
+                // If there are active downloads, show a warning
+                const activeJobs = $('.status-badge').filter(function() {
+                    return $(this).text() !== 'completed' && $(this).text() !== 'error';
+                }).length;
+                
+                if (activeJobs > 0) {
+                    const message = 'You have active downloads. If you leave, your downloads will continue but your session may expire if you don\'t return within 30 minutes.';
+                    e.returnValue = message;
+                    return message;
+                }
+            });
+        });
+        
+        // Track previously seen completed files to avoid duplicate downloads
+        let previousCompletedFiles = [];
+        
+        // Function to ping the server to keep the session alive
+        function pingSession() {
+            $.ajax({
+                url: '/ping',
+                type: 'POST',
+                success: function(response) {
+                    console.log("Session pinged successfully");
+                },
+                error: function(xhr) {
+                    console.error("Error pinging session");
+                }
+            });
+        }
+        
+        // Function to trigger auto-download of a file
+        function autoDownloadFile(filename) {
+            console.log("Auto-downloading file: " + filename);
+            const link = document.createElement('a');
+            link.href = '/downloads/' + encodeURIComponent(filename);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function loadJobs() {
+            $.ajax({
+                url: '/jobs',
+                type: 'GET',
+                success: function(jobs) {
+                    if (jobs.length === 0) {
+                        $('#jobsList').html('<div class="text-center py-4"><i class="fas fa-inbox fa-3x mb-3 text-muted"></i><p class="text-muted">No active download jobs</p></div>');
+                        return;
+                    }
+                    
+                    $('#jobsList').empty();
+                    
+                    jobs.forEach(function(job) {
+                        let template = document.getElementById('jobTemplate').content.cloneNode(true);
+                        let jobCard = $(template).find('.job-card');
+                        
+                        // Set job data
+                        $(template).find('.job-url').text(job.url);
+                        
+                        // Set format badge
+                        let formatBadge = $(template).find('.format-badge');
+                        formatBadge.text(job.format_type.toUpperCase());
+                        
+                        // Set status with appropriate styling
+                        let statusBadge = $(template).find('.status-badge');
+                        statusBadge.text(job.status);
+                        
+                        if (job.status === 'completed') {
+                            statusBadge.addClass('bg-success');
+                        } else if (job.status === 'error') {
+                            statusBadge.addClass('bg-danger');
+                        } else if (job.status === 'downloading') {
+                            statusBadge.addClass('bg-primary');
+                            jobCard.addClass('pulse'); // Add pulse animation for active downloads
+                        } else {
+                            statusBadge.addClass('bg-secondary');
+                        }
+                        
+                        // Set progress
+                        let progressBar = $(template).find('.job-progress');
+                        progressBar.css('width', job.progress + '%');
+                        progressBar.text(job.progress.toFixed(1) + '%');
+                        progressBar.attr('aria-valuenow', job.progress);
+                        
+                        // Set other info
+                        $(template).find('.job-current-file').text(job.current_file || 'None');
+                        $(template).find('.job-speed').text(job.speed);
+                        $(template).find('.job-eta').text(job.eta);
+                        
+                        // Show error if present
+                        if (job.error) {
+                            let errorDiv = $(template).find('.job-error');
+                            errorDiv.removeClass('d-none');
+                            errorDiv.find('.error-message').text(job.error);
+                        }
+                        
+                        // Add completed files with download links
+                        let filesList = $(template).find('.completed-files-list');
+                        if (job.completed_files && job.completed_files.length > 0) {
+                            job.completed_files.forEach(function(file) {
+                                // Create clickable download links for completed files
+                                const encodedFile = encodeURIComponent(file);
+                                const fileElement = $('<li></li>');
+                                const fileLink = $('<a href="/downloads/' + encodedFile + '" download="' + file + '"></a>');
+                                
+                                fileLink.html('<span>' + file + '</span><span class="download-icon"><i class="fas fa-download"></i></span>');
+                                fileElement.append(fileLink);
+                                filesList.append(fileElement);
+                                
+                                // Auto-download only newly completed files
+                                // Get current timestamp and completed timestamp
+                                const now = new Date();
+                                const completedAt = job.completed_at ? new Date(job.completed_at) : null;
+                                
+                                // Only auto-download if file was completed in the last 3 seconds
+                                // and hasn't been previously downloaded
+                                const isRecentlyCompleted = completedAt && 
+                                    ((now - completedAt) / 1000 < 3);
+                                
+                                if (job.status === 'completed' && isRecentlyCompleted && 
+                                    !previousCompletedFiles.includes(file)) {
+                                    console.log("New completed file detected: " + file);
+                                    autoDownloadFile(file);
+                                    previousCompletedFiles.push(file);
+                                }
+                            });
+                        } else {
+                            filesList.append('<li class="text-muted">No files completed yet</li>');
+                        }
+                        
+                        $('#jobsList').append(template);
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
