@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - User Data Management{% endblock %}
+
+{% block content %}
+<h1>User Data Management</h1>
+<p>Welcome to the User Data Management System using flask and deployed using Minikube. Please choose an option below:</p>
+<div>
+    <a href="{{ url_for('post_data') }}" class="btn">Post Data</a>
+    <a href="{{ url_for('see_data') }}" class="btn">See Data</a>
+</div>
+{% endblock %}

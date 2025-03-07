@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}See Data - User Data Management{% endblock %}
+
+{% block content %}
+<h1>User Data</h1>
+<p>Below is the list of all users in the database:</p>
+
+{% if users %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Age</th>
+            <th>Gender</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>{{ user[3] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No users found in the database.</p>
+{% endif %}
+
+<div>
+    <a href="{{ url_for('home') }}" class="btn">Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Post Data - User Data Management{% endblock %}
+
+{% block content %}
+<h1>Post User Data</h1>
+<p>Enter user information below:</p>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="1" max="120" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    
+    <div>
+        <button type="submit" class="btn">Submit</button>
+        <a href="{{ url_for('home') }}" class="btn" style="background-color: #f44336;">Cancel</a>
+    </div>
+</form>
+
+{% endblock %}
