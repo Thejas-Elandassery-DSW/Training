@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-storage
+provisioner: kubernetes.io/nfs
+parameters:
+  server: 192.168.49.2  # Updated with your Minikube IP
+  path: /srv/nfs/kubernetes  # Replace with your exported NFS path
+reclaimPolicy: Retain
+volumeBindingMode: Immediate

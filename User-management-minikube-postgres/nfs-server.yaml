@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-server
+spec:
+  selector:
+    matchLabels:
+      app: nfs-server
+  template:
+    metadata:
+      labels:
+        app: nfs-server
+    spec:
+      containers:
+      - name: nfs-server
+        image: itsthenetwork/nfs-server-alpine:latest
+        securityContext:
+          privileged: true
+        env:
+        - name: SHARED_DIRECTORY
+          value: /data
+        volumeMounts:
+        - mountPath: /data
+          name: nfs-vol
+      volumes:
+      - name: nfs-vol
+        hostPath:
+          path: /data/nfs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-server
+spec:
+  ports:
+  - name: nfs
+    port: 2049
+    protocol: TCP
+    targetPort: 2049
+  - name: mountd
+    port: 20048
+    protocol: TCP
+    targetPort: 20048
+  - name: rpcbind
+    port: 111
+    protocol: TCP
+    targetPort: 111
+  selector:
+    app: nfs-server
